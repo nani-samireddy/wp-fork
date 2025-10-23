@@ -1,0 +1,168 @@
+/**
+ * WP Fork - Comparison View Styles
+ */
+
+.wp-fork-comparison-wrapper {
+    margin: 20px 0;
+}
+
+.wp-fork-diff-line {
+    padding: 5px 10px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+
+    &.same {
+        background: #f6f7f7;
+    }
+
+    &.added {
+        background: #d4edda;
+        border-left: 3px solid #28a745;
+    }
+
+    &.removed {
+        background: #f8d7da;
+        border-left: 3px solid #dc3545;
+    }
+
+    &.changed {
+        background: #fff3cd;
+        border-left: 3px solid #ffc107;
+    }
+}
+
+// Comparison container styles
+.comparison-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+}
+
+.comparison-header {
+    padding: 20px;
+    border-bottom: 1px solid #c3c4c7;
+    background: #fff;
+
+    h1 {
+        margin: 0 0 10px 0;
+        font-size: 23px;
+        font-weight: 400;
+        line-height: 1.3;
+    }
+
+    .actions {
+        margin-top: 15px;
+
+        .button {
+            margin-right: 10px;
+        }
+    }
+}
+
+.comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.comparison-column {
+    padding: 20px;
+    border-right: 1px solid #c3c4c7;
+
+    &:last-child {
+        border-right: none;
+    }
+
+    @media (max-width: 768px) {
+        border-right: none;
+        border-bottom: 1px solid #c3c4c7;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    h2 {
+        margin: 0 0 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #2271b1;
+    }
+
+    &.original h2 {
+        border-bottom-color: #d63638;
+    }
+
+    &.fork h2 {
+        border-bottom-color: #00a32a;
+    }
+}
+
+.field-comparison {
+    margin-bottom: 25px;
+}
+
+.field-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1d2327;
+    font-size: 14px;
+}
+
+.field-value {
+    padding: 12px;
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    min-height: 50px;
+    word-wrap: break-word;
+
+    &.changed {
+        background: #fff8e5;
+        border-color: #f0b849;
+    }
+
+    &.content {
+        max-height: 400px;
+        overflow-y: auto;
+        font-family: Consolas, Monaco, monospace;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+}
+
+.diff-indicator {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-left: 8px;
+
+    &.changed {
+        background: #f0b849;
+        color: #fff;
+    }
+
+    &.same {
+        background: #00a32a;
+        color: #fff;
+    }
+}
+
+.meta-info {
+    font-size: 13px;
+    color: #646970;
+    margin-top: 5px;
+}

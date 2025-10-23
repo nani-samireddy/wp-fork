@@ -1,0 +1,33 @@
+/* WP Fork - Comparison Styles */
+
+.wp-fork-comparison-wrapper {
+    margin: 20px 0;
+}
+
+.wp-fork-diff-line {
+    padding: 5px 10px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.wp-fork-diff-line.same {
+    background: #f6f7f7;
+}
+
+.wp-fork-diff-line.added {
+    background: #d4edda;
+    border-left: 3px solid #28a745;
+}
+
+.wp-fork-diff-line.removed {
+    background: #f8d7da;
+    border-left: 3px solid #dc3545;
+}
+
+.wp-fork-diff-line.changed {
+    background: #fff3cd;
+    border-left: 3px solid #ffc107;
+}

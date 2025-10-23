@@ -1,0 +1,271 @@
+/**
+ * WP Fork - Editor Styles
+ * Styles for the Gutenberg editor customizations
+ */
+
+// Fork Actions in Status Section
+.wp-fork-actions-status {
+    .wp-fork-actions-content {
+        padding: 0;
+        margin-bottom: 16px;
+    }
+
+    .wp-fork-actions-label {
+        margin-bottom: 12px;
+        
+        strong {
+            font-size: 13px;
+            color: #1e1e1e;
+        }
+    }
+
+    // Merged notice
+    .wp-fork-merged-notice {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 4px;
+        color: #155724;
+        margin-bottom: 16px;
+
+        .dashicons {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            color: #00a32a;
+        }
+
+        p {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 500;
+        }
+    }
+
+    // Button styles
+    .wp-fork-compare-button,
+    .wp-fork-merge-button {
+        .dashicon {
+            margin-right: 8px;
+        }
+    }
+
+    .wp-fork-compare-button {
+        &:hover:not(:disabled) {
+            border-color: #2271b1;
+            color: #2271b1;
+        }
+    }
+
+    .wp-fork-merge-button {
+        &:hover:not(:disabled) {
+            background: #00a32a;
+            border-color: #00a32a;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        &.is-busy {
+            .components-spinner {
+                margin-right: 8px;
+            }
+        }
+    }
+}
+
+// Modal Styles
+.wp-fork-merge-modal,
+.wp-fork-compare-modal {
+    .components-modal__content {
+        padding: 24px;
+    }
+
+    .wp-fork-modal-info {
+        font-size: 13px;
+        color: #757575;
+        margin-top: 16px;
+    }
+
+    .wp-fork-modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid #ddd;
+    }
+
+    .wp-fork-modal-loading {
+        text-align: center;
+        padding: 40px 20px;
+
+        .components-spinner {
+            margin: 0 auto 16px;
+        }
+
+        p {
+            color: #757575;
+            font-size: 14px;
+        }
+    }
+
+    .wp-fork-modal-error {
+        padding: 20px;
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 4px;
+        color: #721c24;
+    }
+}
+
+// Comparison Modal Specific Styles
+.wp-fork-compare-modal {
+    .components-modal__content {
+        max-width: 1200px;
+        width: 90vw;
+    }
+
+    .wp-fork-comparison-content {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .wp-fork-comparison-section {
+        margin-bottom: 32px;
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #2271b1;
+        }
+    }
+
+    .wp-fork-comparison-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .wp-fork-comparison-column {
+        h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        &.original h4 {
+            color: #d63638;
+        }
+
+        &.fork h4 {
+            color: #00a32a;
+        }
+    }
+
+    .wp-fork-field-value {
+        padding: 12px;
+        background: #f6f7f7;
+        border: 1px solid #dcdcde;
+        border-radius: 4px;
+        min-height: 50px;
+        word-wrap: break-word;
+
+        &.content {
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    }
+}
+
+// Merge Result Modal Styles
+.wp-fork-merge-result-modal {
+    .wp-fork-merge-success,
+    .wp-fork-merge-error {
+        text-align: center;
+        padding: 20px;
+
+        .dashicons {
+            display: block;
+            margin: 0 auto;
+        }
+
+        p {
+            margin: 16px 0 0 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    }
+
+    .wp-fork-merge-success {
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+    }
+
+    .wp-fork-conflicts-warning {
+        background: #fff8e5;
+        border: 2px solid #f0b849;
+        border-radius: 4px;
+        padding: 20px;
+        margin: 20px 0;
+
+        h3 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            color: #8a6d3b;
+        }
+
+        p {
+            margin: 0 0 12px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        ul {
+            margin: 12px 0;
+            padding-left: 24px;
+
+            li {
+                margin-bottom: 8px;
+                font-size: 14px;
+                line-height: 1.5;
+
+                strong {
+                    color: #8a6d3b;
+                    text-transform: capitalize;
+                }
+            }
+        }
+
+        .wp-fork-conflict-resolution {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f0b849;
+            font-weight: 600;
+            color: #8a6d3b;
+        }
+    }
+
+    .wp-fork-modal-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+    }
+}

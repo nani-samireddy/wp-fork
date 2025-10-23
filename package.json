@@ -1,0 +1,25 @@
+{
+  "name": "wp-fork",
+  "version": "1.0.0",
+  "description": "A WordPress plugin that allows you to fork posts like Git branches - create copies, make changes, compare differences, and merge back to the original.",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "format": "wp-scripts format",
+    "lint:js": "wp-scripts lint-js",
+    "lint:css": "wp-scripts lint-style",
+    "packages-update": "wp-scripts packages-update"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^27.0.0"
+  },
+  "author": "Nani Samireddy",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "fork",
+    "gutenberg",
+    "block-editor"
+  ]
+}
