@@ -1,30 +1,31 @@
-# WP Fork
+WP Fork
 
-A WordPress plugin that allows you to fork posts like Git branches - create copies, make changes, compare differences, and merge back to the original.
+Fork posts like Git branches. Create a draft fork, edit in Gutenberg, compare side‑by‑side, and merge back safely.
 
-## Features
+Description
+- Fork any enabled post type from the list table
+- Compare fork vs original in a modal using BlockPreview
+- Merge back with an automatic revision backup
+- Track fork state (draft or merged)
+- Configure enabled post types and post‑merge behavior (delete or trash)
 
-- **Custom Post Type (Fork)**: Dedicated CPT for managing forks
-- **Settings Page**: Configure which post types can be forked and post-merge actions
-- **Fork Creation**: One-click forking from any enabled post type
-- **Gutenberg Support**: Full Gutenberg editor support with custom Merge and Compare buttons
-- **Draft/Merge States**: Forks have only draft and merged states (no publish button)
-- **Merge Functionality**: Merge fork content back to the original post directly from the editor (like Git merge)
-- **Comparison View**: Side-by-side comparison of fork vs original
-- **Post-Merge Actions**: Choose to delete or lock (trash) forks after merging
-- **Revision Support**: Creates backup revisions before merging
+Requirements
+- WordPress 6.0+
+- Block Editor (Gutenberg) enabled
 
-## Installation
+Installation
+1. Copy the `wp-fork` folder to `wp-content/plugins/`
+2. Activate “WP Fork” in Plugins
+3. Forks → Options: choose enabled post types and merge behavior
 
-1. Upload the `wp-fork` folder to `/wp-content/plugins/`
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to Settings > WP Fork to configure the plugin
+Usage
+- From Posts/Pages list: hover a row → Fork
+- Edit the Fork (Gutenberg). Use “Compare with Original” to preview both versions.
+- Click “Merge into Original” when ready. A revision of the original is created first.
 
-## Configuration
+Notes
+- Forks cannot be created via “Add New” and cannot be published directly.
+- Built assets are required (build/editor). For development run `npm install && npm run build`.
 
-### Settings Page (Settings > WP Fork)
-
-1. **Enable Fork for Post Types**: Select which post types should have the fork feature
-2. **After Merging Fork**: Choose what happens to the fork after merging:
-   - **Delete**: Permanently delete the fork
-   - **Lock**: Move the fork to trash
+Changelog
+- 1.0.0: Initial public release

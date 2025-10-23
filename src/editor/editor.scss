@@ -84,6 +84,8 @@
 .wp-fork-compare-modal {
     .components-modal__content {
         padding: 24px;
+        max-height: 85vh;
+        overflow: auto;
     }
 
     .wp-fork-modal-info {
@@ -129,11 +131,13 @@
     .components-modal__content {
         max-width: 1200px;
         width: 90vw;
+        max-height: 85vh; // keep modal scrollable
+        overflow: auto;   // allow modal scrolling
     }
 
     .wp-fork-comparison-content {
-        max-height: 70vh;
-        overflow-y: auto;
+        height: auto;
+        overflow: visible; // modal handles scrolling
     }
 
     .wp-fork-comparison-section {
@@ -152,6 +156,8 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
+        align-items: start;
+        align-items: start;
 
         @media (max-width: 768px) {
             grid-template-columns: 1fr;
@@ -185,11 +191,71 @@
         word-wrap: break-word;
 
         &.content {
-            max-height: 400px;
-            overflow-y: auto;
+            max-height: none; // allow full content
+            overflow: visible; // no inner scrollbars
             font-size: 13px;
             line-height: 1.6;
+
+            &.preview {
+                width: 100%;
+                padding: 0;
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+
+                // Block preview wrapper
+                .block-editor-block-preview__container {
+                    max-height: none;
+                    overflow: visible;
+                    height: auto;
+                    width: 100%;
+                }
+
+                // Fallback HTML preview is hidden unless the preview container is empty
+                .wp-fork-preview-fallback {
+                    display: none;
+                    padding: 0;
+                }
+
+                .block-editor-block-preview__container:empty + .wp-fork-preview-fallback {
+                    display: block;
+                }
+
+                // Style the preview content
+                .block-editor-block-preview__content {
+                    padding: 0;
+                    background: transparent;
+                    overflow: visible;
+                    height: auto;
+
+                    // Make blocks look like the actual editor
+                    .wp-block {
+                        max-width: 100%;
+                        img, video, iframe {
+                            max-width: 100%;
+                            height: auto;
+                        }
+                    }
+                }
+
+                // Empty state
+                .wp-fork-empty-content {
+                    padding: 40px 20px;
+                    text-align: center;
+                    color: #757575;
+                    font-style: italic;
+                }
+            }
         }
+    }
+
+    // (Diff highlighting removed for now)
+
+    // Host element that BlockPreview measures for width
+    .wp-fork-preview-host {
+        width: 100%;
+        height: auto;
+        overflow: visible;
     }
 }
 

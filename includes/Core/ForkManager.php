@@ -31,7 +31,8 @@ class ForkManager {
         
         // Prepare fork data
         $fork_data = array(
-            'post_title'    => sprintf(__('[Fork] %s', 'wp-fork'), $original_post->post_title),
+            // Keep the same title as original; no [Fork] prefix
+            'post_title'    => $original_post->post_title,
             'post_content'  => $original_post->post_content,
             'post_excerpt'  => $original_post->post_excerpt,
             'post_status'   => 'draft',

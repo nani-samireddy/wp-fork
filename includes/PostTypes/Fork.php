@@ -55,6 +55,11 @@ class Fork {
             'show_in_rest'          => true, // Enable Gutenberg editor
             'rest_base'             => 'forks',
             'rest_controller_class' => 'WP_REST_Posts_Controller',
+            // Disallow creating forks via the UI; only via our action
+            'map_meta_cap'          => true,
+            'capabilities'          => array(
+                'create_posts' => 'do_not_allow', // removes "Add New" UI and route
+            ),
         );
         
         register_post_type('fork', $args);
@@ -162,27 +167,23 @@ class Fork {
                 );
             }
         } else {
-            // Fallback to source file for development
-            wp_enqueue_script(
-                'wp-fork-editor',
-                WP_FORK_PLUGIN_URL . 'assets/js/fork-editor.js',
-                array('wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data', 'wp-i18n'),
-                WP_FORK_VERSION,
-                true
-            );
+            // In production we require built assets; if missing, bail.
+            return;
         }
         
         // Get fork metadata
         $original_post_id = get_post_meta($post->ID, '_fork_original_post_id', true);
         
         // Localize script with necessary data
-        wp_localize_script('wp-fork-editor', 'wpForkEditor', array(
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'adminUrl' => admin_url(),
-            'postId' => $post->ID,
-            'originalPostId' => $original_post_id,
-            'mergeNonce' => wp_create_nonce('merge_fork'),
-            'compareNonce' => wp_create_nonce('compare_fork_' . $post->ID),
-        ));
+        if (wp_script_is('wp-fork-editor', 'enqueued')) {
+            wp_localize_script('wp-fork-editor', 'wpForkEditor', array(
+                'ajaxUrl' => admin_url('admin-ajax.php'),
+                'adminUrl' => admin_url(),
+                'postId' => $post->ID,
+                'originalPostId' => $original_post_id,
+                'mergeNonce' => wp_create_nonce('merge_fork'),
+                'compareNonce' => wp_create_nonce('compare_fork_' . $post->ID),
+            ));
+        }
     }
 }

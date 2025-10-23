@@ -397,6 +397,7 @@ class Comparison {
                 'id' => $original->ID,
                 'title' => $original->post_title,
                 'content' => apply_filters('the_content', $original->post_content),
+                'content_raw' => $original->post_content, // Raw content for block parsing
                 'excerpt' => $original->post_excerpt,
                 'modified' => get_the_modified_date('', $original) . ' ' . get_the_modified_time('', $original),
             ),
@@ -404,6 +405,7 @@ class Comparison {
                 'id' => $fork->ID,
                 'title' => $fork->post_title,
                 'content' => apply_filters('the_content', $fork->post_content),
+                'content_raw' => $fork->post_content, // Raw content for block parsing
                 'excerpt' => $fork->post_excerpt,
                 'modified' => get_the_modified_date('', $fork) . ' ' . get_the_modified_time('', $fork),
             ),

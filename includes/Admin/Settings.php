@@ -20,9 +20,11 @@ class Settings {
      * Add settings page to admin menu
      */
     public function add_settings_page() {
-        add_options_page(
+        // Move settings under Fork menu as "Options"
+        add_submenu_page(
+            'edit.php?post_type=fork',
             __('WP Fork Settings', 'wp-fork'),
-            __('WP Fork', 'wp-fork'),
+            __('Options', 'wp-fork'),
             'manage_options',
             'wp-fork-settings',
             array($this, 'render_settings_page')

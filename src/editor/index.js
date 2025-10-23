@@ -5,9 +5,11 @@
 import { registerPlugin } from '@wordpress/plugins';
 import { PluginPostStatusInfo } from '@wordpress/editor';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { Button, Modal, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { BlockPreview } from '@wordpress/block-editor';
+import { parse, rawHandler, serialize } from '@wordpress/blocks';
 
 // Import styles
 import './editor.scss';
@@ -26,7 +28,7 @@ const ForkActionsPanel = () => {
     const [isLoadingComparison, setIsLoadingComparison] = useState(false);
 
     // Get post data from the editor store
-    const { postId, originalPostId, forkState } = useSelect((select) => {
+    const { postId, originalPostId, forkState, editedTitle, editedContent, editedExcerpt } = useSelect((select) => {
         const { getCurrentPostId, getEditedPostAttribute } = select('core/editor');
         const meta = getEditedPostAttribute('meta') || {};
 
@@ -34,11 +36,90 @@ const ForkActionsPanel = () => {
             postId: getCurrentPostId(),
             originalPostId: meta._fork_original_post_id || null,
             forkState: meta._fork_state || 'draft',
+            editedTitle: getEditedPostAttribute('title'),
+            editedContent: getEditedPostAttribute('content'),
+            editedExcerpt: getEditedPostAttribute('excerpt'),
         };
-    }, []);
+    });
 
     // Get savePost action from the editor store
     const { savePost } = useDispatch('core/editor');
+
+    // Convert post content string into blocks for preview
+    const toBlocks = (content) => {
+        if (!content || typeof content !== 'string' || !content.trim()) {
+            return [];
+        }
+        try {
+            // If content includes block serialization markers, parse it
+            const hasBlocks = content.includes('<!-- wp:');
+            if (hasBlocks) {
+                const blocks = parse(content);
+                if (Array.isArray(blocks) && blocks.length) return blocks;
+            }
+            // Fallback: convert arbitrary HTML to blocks
+            const blocksFromRaw = rawHandler({ HTML: content });
+            return Array.isArray(blocksFromRaw) ? blocksFromRaw : [];
+        } catch (e) {
+            // Last resort: empty preview
+            return [];
+        }
+    };
+
+    // Convert blocks (or string) to HTML as a reliable fallback
+    const toHTML = (content, fallbackHTML = '') => {
+        // Prefer server-rendered HTML if provided (proper shortcode/theme context)
+        if (fallbackHTML) return fallbackHTML;
+        const blocks = toBlocks(content);
+        if (blocks && blocks.length) {
+            try {
+                return serialize(blocks);
+            } catch (e) {
+                // no-op
+            }
+        }
+        return '';
+    };
+
+    // PreviewPane renders BlockPreview sized to container width, with HTML fallback
+    const PreviewPane = ({ contentRaw, fallbackHTML }) => {
+        const hostRef = useRef(null);
+        const [width, setWidth] = useState(0);
+
+        useEffect(() => {
+            const el = hostRef.current;
+            if (!el) return;
+            const ro = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    const w = entry.contentRect?.width || el.clientWidth || 0;
+                    if (w && Math.abs(w - width) > 1) {
+                        setWidth(w);
+                    }
+                }
+            });
+            ro.observe(el);
+            // initial
+            setWidth(el.clientWidth || 0);
+            return () => ro.disconnect();
+        }, []);
+
+        const blocks = toBlocks(contentRaw);
+        const showBlocks = blocks.length > 0;
+        const vpWidth = width > 0 ? Math.floor(width) : undefined;
+
+        return (
+            <div className="wp-fork-preview-host" ref={hostRef}>
+                {showBlocks ? (
+                    <BlockPreview blocks={blocks} viewportWidth={vpWidth} />
+                ) : (
+                    <div
+                        className="wp-fork-preview-fallback"
+                        dangerouslySetInnerHTML={{ __html: toHTML(contentRaw, fallbackHTML) }}
+                    />
+                )}
+            </div>
+        );
+    };
 
     /**
      * Handle Compare action
@@ -66,16 +147,16 @@ const ForkActionsPanel = () => {
                 },
             });
 
-            if (response.success) {
+            if (response?.success) {
                 setComparisonData(response.data);
             } else {
-                console.error('Comparison failed:', response.data?.message);
-                setComparisonData({ error: response.data?.message || __('Failed to load comparison.', 'wp-fork') });
+                const message = response?.data?.message || __('Failed to load comparison.', 'wp-fork');
+                setComparisonData({ error: message });
             }
+            setIsLoadingComparison(false);
         } catch (error) {
             console.error('WP Fork comparison error:', error);
             setComparisonData({ error: __('An error occurred while loading comparison.', 'wp-fork') });
-        } finally {
             setIsLoadingComparison(false);
         }
     };
@@ -270,7 +351,7 @@ const ForkActionsPanel = () => {
                                     <div className="wp-fork-comparison-column fork">
                                         <h4>{__('Fork', 'wp-fork')}</h4>
                                         <div className="wp-fork-field-value">
-                                            {comparisonData.fork?.title || ''}
+                                            {editedTitle ?? comparisonData.fork?.title}
                                         </div>
                                     </div>
                                 </div>
@@ -282,14 +363,20 @@ const ForkActionsPanel = () => {
                                 <div className="wp-fork-comparison-grid">
                                     <div className="wp-fork-comparison-column original">
                                         <h4>{__('Original', 'wp-fork')}</h4>
-                                        <div className="wp-fork-field-value content">
-                                            <div dangerouslySetInnerHTML={{ __html: comparisonData.original?.content || '' }} />
+                                        <div className="wp-fork-field-value content preview">
+                                            <PreviewPane
+                                                contentRaw={comparisonData.original?.content_raw || ''}
+                                                fallbackHTML={comparisonData.original?.content || ''}
+                                            />
                                         </div>
                                     </div>
                                     <div className="wp-fork-comparison-column fork">
                                         <h4>{__('Fork', 'wp-fork')}</h4>
-                                        <div className="wp-fork-field-value content">
-                                            <div dangerouslySetInnerHTML={{ __html: comparisonData.fork?.content || '' }} />
+                                        <div className="wp-fork-field-value content preview">
+                                            <PreviewPane
+                                                contentRaw={(editedContent && editedContent.length ? editedContent : comparisonData.fork?.content_raw) || ''}
+                                                fallbackHTML={comparisonData.fork?.content || ''}
+                                            />
                                         </div>
                                     </div>
                                 </div>
